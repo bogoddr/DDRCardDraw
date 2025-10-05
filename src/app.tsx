@@ -26,12 +26,11 @@ export function App() {
   return (
     <DrawStateManager defaultDataSet="ddr_world">
       {kioskMode ? <Kiosk /> : <></>}
-          <ThemeSyncWidget />
-          <UpdateManager />
-          <Header onToggleKioskMode={toggleKioskMode} />
-          <DrawingList />
-          <DropHandler />
-        
+      <ThemeSyncWidget />
+      <UpdateManager />
+      <Header onToggleKioskMode={toggleKioskMode} />
+      <DrawingList />
+      <DropHandler />
     </DrawStateManager>
   );
 }

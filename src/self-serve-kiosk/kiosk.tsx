@@ -1,9 +1,11 @@
 
 import classNames from "classnames";
-import { StrictMode, useCallback, useRef, useState } from "react";
+import { StrictMode, useCallback, useDeferredValue, useRef, useState } from "react";
 
 import { Button, Classes, Code, H3, H5, Intent, Overlay2, Switch } from "@blueprintjs/core";
 import styles from "./kiosk.css";
+import { useDrawState } from "../draw-state";
+import { useConfigState } from "../config-state";
 //import { Example, type ExampleProps, handleBooleanChange } from "@blueprintjs/docs-theme";
 
 //import type { BlueprintExampleData } from "../../tags/types";
@@ -21,6 +23,9 @@ export const Kiosk: React.FC = props => {
     const [usePortal, setUsePortal] = useState(true);
     const [useTallContent, setUseTallContent] = useState(false);
 
+  //const drawings = useDeferredValue(useDrawState((s) => s.drawings));
+  //console.log(drawings)
+
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const handleOpen = useCallback(() => setIsOpen(true), [setIsOpen]);
@@ -32,10 +37,15 @@ export const Kiosk: React.FC = props => {
 
     const focusButton = useCallback(() => buttonRef.current?.focus(), [buttonRef]);
 
-    const toggleScrollButton = useCallback(
-        () => setUseTallContent(use => !use),
-        [setUseTallContent],
-    );
+    const [drawings, drawSongs, hasGameData] = useDrawState((s) => [
+        s.drawings,
+        s.drawSongs,
+        !!s.gameData,
+    ]);
+      function handleDraw() {
+        useConfigState.setState({ showEligibleCharts: false });
+        drawSongs(useConfigState.getState());
+      }
 
     const classes = classNames(
         Classes.CARD,
@@ -73,7 +83,7 @@ export const Kiosk: React.FC = props => {
         </>
     );
 
-    console.log(isOpen)
+    console.log(drawings)
 
     return (
       <>
@@ -124,13 +134,13 @@ export const Kiosk: React.FC = props => {
                                 Focus button
                             </Button>
                             <Button
-                                onClick={toggleScrollButton}
+                                onClick={handleDraw}
                                 icon="double-chevron-down"
                                 endIcon="double-chevron-down"
                                 active={useTallContent}
                                 style={{ margin: "" }}
                             >
-                                Make me scroll
+                                draw songs
                             </Button>
                         </div>
                     </div>
