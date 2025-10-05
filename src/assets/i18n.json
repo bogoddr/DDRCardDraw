@@ -9,6 +9,7 @@
     "credits": "Credits",
     "help": "Help",
     "toggleTheme": "Toggle Theme",
+    "toggleKioskMode": "Toggle Kiosk Mode",
     "lastUpdate": "{gameName} data last updated {date}",
     "gameMenu": {
       "title": "Select game data",

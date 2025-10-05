@@ -14,15 +14,24 @@ import { DrawStateManager } from "./draw-state";
 import { Header } from "./header";
 import { ThemeSyncWidget } from "./theme-toggle";
 import { DropHandler } from "./drop-handler";
+import { useState } from "react";
+import { Kiosk } from "./self-serve-kiosk/kiosk";
 
 export function App() {
+  const [kioskMode, setKioskMode] = useState(false);
+  const toggleKioskMode = () => {
+    setKioskMode(!kioskMode);
+  }
+
   return (
     <DrawStateManager defaultDataSet="ddr_world">
-      <ThemeSyncWidget />
-      <UpdateManager />
-      <Header />
-      <DrawingList />
-      <DropHandler />
+      {kioskMode ? <Kiosk /> : <></>}
+          <ThemeSyncWidget />
+          <UpdateManager />
+          <Header onToggleKioskMode={toggleKioskMode} />
+          <DrawingList />
+          <DropHandler />
+        
     </DrawStateManager>
   );
 }

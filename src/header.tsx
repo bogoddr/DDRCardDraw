@@ -7,7 +7,7 @@ import {
   Navbar,
   Popover,
 } from "@blueprintjs/core";
-import { Trash, InfoSign, Menu as MenuIcon, Help } from "@blueprintjs/icons";
+import { Trash, InfoSign, Menu as MenuIcon, Help, Presentation } from "@blueprintjs/icons";
 import { useState } from "react";
 import { About } from "./about";
 import { HeaderControls } from "./controls";
@@ -17,7 +17,11 @@ import { ThemeToggle } from "./theme-toggle";
 import { DataLoadingSpinner, VersionSelect } from "./version-select";
 import { useDrawState } from "./draw-state";
 
-export function Header() {
+interface Props {
+  onToggleKioskMode: () => void;
+}
+
+export function Header({onToggleKioskMode} : Props) {
   const [aboutOpen, setAboutOpen] = useState(false);
   const clearDrawings = useDrawState((d) => d.clearDrawings);
   const haveDrawings = useDrawState((d) => !!d.drawings.length);
@@ -44,6 +48,12 @@ export function Header() {
         text={t("help")}
       />
       <ThemeToggle />
+      <MenuItem
+        icon={<Presentation />}
+        onClick={() => onToggleKioskMode()}
+        text={t("toggleKioskMode")}
+        data-umami-event="kiosk-open"
+      />
       <LastUpdate />
     </Menu>
   );

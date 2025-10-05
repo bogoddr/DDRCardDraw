@@ -53,3 +53,27 @@ yarn import:itg path/to/pack/folder some-stub-name
 # https://github.com/AnyhowStep/pump-out-sqlite3-dump/
 yarn import:pump path/to/pumpout/db
 ```
+
+## About this fork
+
+This is an experimental front-end for the card draw app. 
+
+The goal is to create a verion of the UI with the following features:
+
+- Usable completely by tournament competitors, with minimal supervision of tournament organizers (TOs)
+- Designed for usage on a tablet
+- A card draw state handler that manages pad side choice, song protect and veto, etc.
+- A TO config screen to handle list of entrants, seeding, card darw settings, and tournament format
+
+User flow:
+- TOs configure the tournament in a TO config screen and starts the tournament.
+  - The tournament format handler generates a list of matches.
+- The app switches to the tournament screen.
+- Competitors approach the tablet/kiosk and select their match.
+- A complete card draw flow starts. An example flow could look like:
+  - First screen: Pad side choice based on seeding
+  - Second screen: The card draw itself. A list of charts appears. Players protect and veto based on seeding.
+  - Third screen: The resulting card draw (Match screen). Displays protects, vetos, song order, and player names and seeding info.
+    - From this screen, chart jacket art can be tapped to show a chart details page containing a link to an embedded YouTube video of the chart, sync information (perhaps an iframe to Final Offset)
+- The current state of the tournament is saved throughout this flow. Previous matches can be navigated to if needed with a back button during any match, and continued from mid-way through the match.
+
