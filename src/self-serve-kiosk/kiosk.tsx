@@ -8,7 +8,39 @@ import DrawnSet from "../drawn-set";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "@blueprintjs/icons";
 
-// Animation variants for slide transitions
+// How the Kiosk screen works:
+// 1st screen
+// - Welcome screen with info
+// 2nd screen
+// - Player selection from list. Two copies of the same list are displayed so player 1 and player 2 can select their names.
+// 3rd-6th screen
+// - Players take turns selecting from the list below. (The higher seed goes first).
+// - Header: PLAYER_NAME, choose an option:
+//  - I want to be the first to protect a song.
+//  - I want protect a song after OTHER_PLAYER_NAME does.
+//  - I want to be the first to veto a song.
+//  - I want veto a song after OTHER_PLAYER_NAME does.
+// 7th-10th screens
+// - Players protect and veto drawn songs using their selections from the previous screens.
+//  - Note: Protects always happen before vetos.
+//  - Example: Player 1 picks first protect and second veto. Player 2 picks second protect and first veto. Resulting order:
+//    - Player 1 protects a song
+//    - Player 2 protects a song
+//    - Player 2 vetos a song
+//    - Player 1 vetos a song
+// 11th screen
+// - Results: Shows a summary of everything chosen from all previous screens.
+
+// Note: In the future this can be made generic by handling options for number of songs drawn, custom rules, etc. 
+// For this feature, the number of pages would need to be dynamic and determined using the custom rules.
+
+type Choice = 'first-protect' | 'second-protect' | 'first-veto' | 'second-veto';
+
+interface PlayerSelection {
+    player: string;
+    selection: Choice;
+}
+
 const slideVariants = {
     enter: (direction: number) => ({
         x: direction > 0 ? 1000 : -1000,
@@ -30,8 +62,12 @@ export const Kiosk: React.FC = props => {
         s.drawSongs,
         !!s.gameData,
     ]);
+    const playerNames = useConfigState((s) => s.playerNames);
+
     const [currentScreen, setCurrentScreen] = useState(0);
     const [direction, setDirection] = useState(0);
+
+    const [playerSelections, setPlayerSelections] = useState<PlayerSelection[]>([]);
 
     function handleDraw() {
         useConfigState.setState({ showEligibleCharts: false });
@@ -49,14 +85,20 @@ export const Kiosk: React.FC = props => {
         );
     });
         
-    // Screen components - add your actual screen content here
-    const Screen1 = () => <div><H3>Screen 1</H3><p>Welcome to the kiosk</p></div>;
-    const Screen2 = () => <div><H3>Screen 2</H3><p>Configuration options</p></div>;
-    const Screen3 = () => <><ScrollableDrawings /><Button onClick={handleDraw}>
-                    Draw songs
-                </Button></>;
+    const Screen1 = () => <WelcomeScreen />;
+    const Screen2 = () => <PlayerSelectScreen />;
+    const Screen3 = () => <ProtectVetoOrderScreen player={TODO_higher_seed_player_here} step={1} />;
+    const Screen4 = () => <ProtectVetoOrderScreen player={TODO_lower_seed_player_here} step={2} />;
+    const Screen5 = () => <ProtectVetoOrderScreen player={TODO_higher_seed_player_here} step={3} />;
+    const Screen6 = () => <ProtectVetoOrderScreen player={TODO_lower_seed_player_here} step={4} />;
+    const Screen7 = () => <CardDrawScreen choice={'first-protect'} />;
+    const Screen8 = () => <CardDrawScreen choice={'second-protect'} />;
+    const Screen9 = () => <CardDrawScreen choice={'first-veto'} />;
+    const Screen10 = () => <CardDrawScreen choice={'second-veto'} />;
+    const Screen11 = () => <ResultsScreen />;
 
-    const screens = [Screen1, Screen2, Screen3];
+     // Sometimes I hate LLM generated code smh
+    const screens = [Screen1, Screen2, Screen3, Screen4, Screen4, Screen5, Screen6, Screen7, Screen8, Screen10, Screen11];
 
 
     const goToNext = () => {
@@ -67,6 +109,7 @@ export const Kiosk: React.FC = props => {
     };
 
     const goToPrevious = () => {
+        // TODO: Pop the last PlayerSelection from the list if there are elements in the list
         if (currentScreen > 0) {
             setDirection(-1);
             setCurrentScreen(currentScreen - 1);
@@ -93,7 +136,7 @@ export const Kiosk: React.FC = props => {
                             exit="exit"
                             transition={{
                                 x: { type: "spring", stiffness: 300, damping: 30 },
-                                opacity: { duration: 0.0 },
+                                opacity: { duration: 0.2 },
                             }}
                             className={styles.screen}
                         >
