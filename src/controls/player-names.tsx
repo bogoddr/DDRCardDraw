@@ -52,6 +52,7 @@ function SortablePlayerItem({ id, name, index, onRemove }: SortablePlayerItemPro
     transition,
     opacity: isDragging ? 0.5 : 1,
     display: 'flex',
+    alignItems: 'center',
   };
 
   return (
@@ -67,7 +68,7 @@ function SortablePlayerItem({ id, name, index, onRemove }: SortablePlayerItemPro
         {...listeners}
         style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
       />
-      <div className="sortable-player-seed">{index + 1}</div>
+      <div className="sortable-player-seed" style={{paddingRight: 10}}>{index + 1}</div>
       <div className="sortable-player-name">{name}</div>
       <Button
         minimal
