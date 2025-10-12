@@ -101,10 +101,15 @@ export const Kiosk: React.FC = props => {
     interface CardDrawScreenProps {
         choice: Choice;
     }
-    const CardDrawScreen = memo<CardDrawScreenProps>(function DrawnSet({ choice }) {
+    const CardDrawScreen = memo<CardDrawScreenProps>(({ choice }) => {
         return (
             <>
                 <div>TODO: Display the five cards drawn. One can be tapped to protect or veto it (based on "choice" prop). Once one is vetoed/protected, the Next button becomes available.</div>
+                <div>
+                    {drawings.map((d) => (
+                        <DrawnSet key={d.id} drawing={d} />
+                    ))}
+                </div>
             </>
         );
     });
@@ -118,16 +123,16 @@ export const Kiosk: React.FC = props => {
         
     const Screen1 = () => <WelcomeScreen />;
     const Screen2 = () => <PlayerSelectScreen />;
-    const Screen3 = () => <ProtectVetoOrderScreen player={TODO_higher_seed_player_name_here} step={1} />;
-    const Screen4 = () => <ProtectVetoOrderScreen player={TODO_lower_seed_player_name_here} step={2} />;
-    const Screen5 = () => <ProtectVetoOrderScreen player={TODO_higher_seed_player_namer_here} step={3} />;
-    const Screen6 = () => <ProtectVetoOrderScreen player={TODO_lower_seed_player_name_here} step={4} />;
+    const Screen3 = () => <ProtectVetoOrderScreen player={'TODO_higher_seed_player_name_here'} step={1} />;
+    const Screen4 = () => <ProtectVetoOrderScreen player={'TODO_lower_seed_player_name_here'} step={2} />;
+    const Screen5 = () => <ProtectVetoOrderScreen player={'TODO_higher_seed_player_namer_here'} step={3} />;
+    const Screen6 = () => <ProtectVetoOrderScreen player={'TODO_lower_seed_player_name_here'} step={4} />;
     const Screen7 = () => <CardDrawScreen choice={'first-protect'} />;
     const Screen8 = () => <CardDrawScreen choice={'second-protect'} />;
     const Screen9 = () => <CardDrawScreen choice={'first-veto'} />;
     const Screen10 = () => <CardDrawScreen choice={'second-veto'} />;
     const Screen11 = () => <ResultsScreen />;
-    const screens = [Screen1, Screen2, Screen3, Screen4, Screen4, Screen5, Screen6, Screen7, Screen8, Screen9, Screen10, Screen11];
+    const screens = [Screen1, Screen2, Screen3, Screen4, Screen5, Screen6, Screen7, Screen8, Screen9, Screen10, Screen11];
 
     const goToNext = () => {
         if (currentScreen < screens.length - 1) {
